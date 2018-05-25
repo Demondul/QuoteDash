@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Edit Account</title>
+    {%load static%}
+    <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/position.css" %}">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <div class="col-sm-6 left">
+                <h3>Edit My Account</h3>
+            </div>
+            <div class="col-sm-4 right">
+                <form action='/logout' method='POST'>
+                    {% csrf_token %}
+                <a href="/home">Back</a> 
+                <input type="Submit" class="btn btn-info" value="Logout">
+                </form>
+            </div>
+        </div>
+        <div class="left col-sm-6">
+            <form action='/edit' method='POST'>
+                {% csrf_token %}
+                First name: <input type="text" id="fName" name="txtFirst" class="form-control input-sm chat-input" value="{{user.first_name}}"/>
+                </br>
+                Last name: <input type="text" id="lName" name="txtLast" class="form-control input-sm chat-input" value="{{user.last_name}}"/>
+                </br>
+                Email: <input type="email" id="email" name="txtEmail" class="form-control input-sm chat-input" value="{{user.email_address}}"/>
+                </br>
+                <input type="submit" class="btn" name="btnSubmit" value="Update" name="btnUpdate">
+            </form>
+        </div>
+        <div class="right col-sm-4">
+                {% if messages %}
+                {% for message in messages %}
+                    <ul class="messages">
+                        <li class="alert alert-danger">{{ message }}</li>
+                    </ul>
+                {% endfor %}
+                {% endif %}
+        </div>
+    </div>
+</body>
+</html>

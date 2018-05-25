@@ -1,0 +1,15 @@
+<html>
+    <head>
+        {%load static%}
+        <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}">
+    </head>
+    <body>
+        <h1>SUCCESS! WELCOME, {{user.first_name}}! </h1>
+        <span class="alert alert-success">Successfully registered (or logged in)!</span>
+        <form action='/logout' method='POST'>
+            {% csrf_token %}
+            <input type="submit" class="btn btn-info" value="Logout" name="btnLogout">   
+        </form>
+    </body>
+</html>

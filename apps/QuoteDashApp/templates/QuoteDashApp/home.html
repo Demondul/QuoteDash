@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Quote Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {%load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/position.css" %}">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <div class="col-sm-6 left">
+                <h3>Welcome {{user.first_name}} {{user.last_name}}</h3>
+            </div>
+            <div class="col-sm-4 right">
+                <form action='/logout' method='POST'>
+                    {% csrf_token %}
+                    <a href="edit/{{user.id}}">Edit My Account</a> 
+                    <input type="Submit" class="btn btn-info" value="Logout">
+                </form>
+            </div>
+        </div>
+        <div class="left col-sm-6">
+            {%for quote in quotes%}
+            <br>
+            <div class="quotes">
+                <div class="quote left col-sm-8">
+                    <span class="author">{{quote.author}}</span>: <q>{{quote.message}}</q>
+                    <p>Posted by: <a href="user/{{quote.posted_by_id}}">{{quote.posted_by.first_name}} {{quote.posted_by.last_name}}</a></p>
+                </div>
+                {% if user.id == quote.posted_by_id %}
+                    <div class="right">
+                        <form action='/delete/{{quote.id}}' method='POST'>
+                            {% csrf_token %}
+                            <button class="btn btn-info"><i class="fa fa-close"></i></button>
+                        </form>
+                    </div>
+                {% endif %}
+                <br>
+                <div class="likes">
+                    <div class="left col-sm-8">
+                        <h5>{{quote.liked_by.count}} Likes</h5>
+                    </div>
+                    {% if user not in quote.liked_by.all %}
+                    <div class="right">
+                        <form action='/like/{{quote.id}}' method='POST'>
+                            {% csrf_token %}
+                            <input type="Submit" class="btn btn-info btnToRight" value="Like">
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+        <div class="right col-sm-4">
+            <form action="/newQuote/{{user.id}}" method="POST">
+                {%csrf_token%}
+                <span class="form-control-lg">Name:</span>
+                <input type="text" class="form-control" name="txtAuthor"><br>
+                <span class="form-control-lg">Description:</span>
+                <textarea class="form-control" name="txtQuote" rows="3"></textarea><br>
+                <input type="submit" value="Submit">
+            </form>
+            {% if messages %}
+            {% for message in messages %}
+                <ul class="messages">
+                    <li class="alert alert-danger">{{ message }}</li>
+                </ul>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
